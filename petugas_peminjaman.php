@@ -3,9 +3,9 @@ include 'config.php';
 require_role('petugas');
 
 $result = $mysqli->query("
-SELECT p.*, u.username, a.namaalat
+SELECT p.*, u.namalengkap AS peminjam, a.namaalat
 FROM peminjaman p
-JOIN user u ON p.iduser = u.iduser
+JOIN users u ON p.iduser = u.id
 JOIN alat a ON p.idalat = a.idalat
 ORDER BY p.idpinjam DESC
 ");
@@ -24,7 +24,7 @@ ORDER BY p.idpinjam DESC
 <table border="1" cellpadding="10">
 <tr>
 <th>ID</th>
-<th>User</th>
+<th>Peminjam</th>
 <th>Alat</th>
 <th>Qty</th>
 <th>Status</th>
@@ -34,7 +34,7 @@ ORDER BY p.idpinjam DESC
 <?php while ($row = $result->fetch_assoc()) { ?>
 <tr>
 <td><?= $row['idpinjam'] ?></td>
-<td><?= $row['username'] ?></td>
+<td><?= $row['peminjam'] ?></td>
 <td><?= $row['namaalat'] ?></td>
 <td><?= $row['qty'] ?></td>
 <td><?= $row['status'] ?></td>

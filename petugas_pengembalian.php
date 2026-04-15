@@ -3,11 +3,11 @@ include 'config.php';
 require_role('petugas');
 
 $result = $mysqli->query("
-SELECT p.*, u.username, a.namaalat
+SELECT p.*, u.namalengkap AS peminjam, a.namaalat
 FROM peminjaman p
-JOIN user u ON p.iduser = u.iduser
+JOIN users u ON p.iduser = u.id
 JOIN alat a ON p.idalat = a.idalat
-WHERE p.status='dipinjam'
+WHERE p.status='menunggu konfirmasi'
 ");
 ?>
 
@@ -24,18 +24,20 @@ WHERE p.status='dipinjam'
 <table border="1" cellpadding="10">
 <tr>
 <th>ID</th>
-<th>User</th>
+<th>Peminjam</th>
 <th>Alat</th>
 <th>Qty</th>
+<th>Status</th>
 <th>Aksi</th>
 </tr>
 
 <?php while ($row = $result->fetch_assoc()) { ?>
 <tr>
 <td><?= $row['idpinjam'] ?></td>
-<td><?= $row['username'] ?></td>
+<td><?= $row['peminjam'] ?></td>
 <td><?= $row['namaalat'] ?></td>
 <td><?= $row['qty'] ?></td>
+<td><?= $row['status'] ?></td>
 
 <td>
 <a href="kembali.php?id=<?= $row['idpinjam'] ?>">Konfirmasi</a>

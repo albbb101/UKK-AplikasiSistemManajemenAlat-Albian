@@ -5,9 +5,9 @@ $id = $_GET['id'];
 
 $mysqli->query("
 UPDATE peminjaman 
-SET status='ditolak' 
+SET status='menunggu konfirmasi' 
 WHERE idpinjam='$id'
 ");
 
-header("Location: petugas_peminjaman.php");
+header("Location: peminjaman_user.php");
 exit;

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // insert
             $mysqli->query("INSERT INTO peminjaman 
-            (tglpinjam, tglkembali, idalat, qty, iduser, kondisiakhir, status)
+            (tglpinjam, tglkembali, idalat, qty, iduser, status)
             VALUES ('$tgl', NULL, '$idalat', '$qty', '$iduser', NULL, 'dipinjam')");
 
             // kurangi stok
@@ -58,7 +58,6 @@ if (isset($_GET['kembali'])) {
     $mysqli->query("UPDATE peminjaman SET
         status='dikembalikan',
         tglkembali='$today',
-        kondisiakhir='baik'
         WHERE idpinjam='$id'
     ");
 

@@ -38,7 +38,6 @@ $result = $mysqli->query($query);
     <th>Qty</th>
     <th>Tanggal Pinjam</th>
     <th>Tanggal Kembali</th>
-    <th>Kondisi</th>
 </tr>
 
 <?php while ($row = $result->fetch_assoc()) { ?>
@@ -49,7 +48,7 @@ $result = $mysqli->query($query);
     <td><?= $row['qty'] ?></td>
     <td><?= $row['tglpinjam'] ?></td>
     <td><?= $row['tglkembali'] ?></td>
-    <td><?= $row['kondisiakhir'] ?></td>
+
 </tr>
 <?php } ?>
 

@@ -17,9 +17,6 @@ $result = $mysqli->query($query);
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Peminjaman Saya</title>
-</head>
 <body>
 
 <?php include 'navbar_user.php'; ?>
@@ -32,6 +29,13 @@ $result = $mysqli->query($query);
     <h3><?= $row['namaalat'] ?></h3>
     <p>Jumlah: <?= $row['qty'] ?></p>
     <p>Status: <?= $row['status'] ?></p>
+
+    <?php if ($row['status'] == 'dipinjam') { ?>
+        <a href="request_kembali.php?id=<?= $row['idpinjam'] ?>">
+            Kembalikan
+        </a>
+    <?php } ?>
+
 </div>
 <?php } ?>
 
