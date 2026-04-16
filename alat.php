@@ -27,6 +27,7 @@ $result = $mysqli->query($query);
 
 <body class="layout">
 
+<?php $activePage = 'alat'; ?>
 <?php include 'sidebar.php'; ?>
 
 <div class="main">

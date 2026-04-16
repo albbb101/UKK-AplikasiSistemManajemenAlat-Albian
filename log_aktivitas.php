@@ -2,7 +2,6 @@
 include 'config.php';
 require_role('admin');
 
-// FILTER
 $where = "WHERE 1=1";
 
 if (!empty($_GET['aktivitas']) && $_GET['aktivitas'] != 'Semua') {
@@ -31,6 +30,7 @@ $result = $mysqli->query($query);
 
 <body class="layout">
 
+<?php $activePage = 'log'; ?>
 <?php include 'sidebar.php'; ?>
 
 <div class="main">
@@ -38,7 +38,6 @@ $result = $mysqli->query($query);
 
 <h2>Log Aktivitas</h2>
 
-<!-- FILTER -->
 <div class="form-box">
 <form method="GET">
 
@@ -55,13 +54,17 @@ Tanggal Mulai:
 Tanggal Akhir:
 <input type="date" name="end">
 
-<button type="submit">Terapkan Filter</button>
-<a href="log_aktivitas.php" class="btn">Reset</a>
+<button class="btn add" type="submit">
+    Terapkan Filter
+</button>
+
+<a href="log_aktivitas.php" class="btn add">
+    Reset
+</a>
 
 </form>
 </div>
 
-<!-- TABLE -->
 <table>
 <tr>
     <th>Waktu</th>

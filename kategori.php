@@ -21,6 +21,7 @@ $result = $mysqli->query("SELECT * FROM kategori");
 
 <body class="layout">
 
+<?php $activePage = 'kategori'; ?>
 <?php include 'sidebar.php'; ?>
 
 <div class="main">

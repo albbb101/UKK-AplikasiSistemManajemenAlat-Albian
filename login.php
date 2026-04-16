@@ -1,32 +1,40 @@
 <?php
 include 'config.php';
 
+$error = null;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $name = $_POST['name'];
-    $pass = $_POST['pass'];
+    $name = $_POST['name'] ?? '';
+    $pass = $_POST['pass'] ?? '';
 
     $query = "SELECT * FROM users WHERE name='$name' AND pass='$pass'";
     $result = $mysqli->query($query);
 
-    if ($result && $result->num_rows > 0) {
+    if (!$result) {
+        die("SQL Error: " . $mysqli->error);
+    }
+
+    if ($result->num_rows > 0) {
+
         $user = $result->fetch_assoc();
 
-        $_SESSION['id']   = $user['id'];
+        $_SESSION['id'] = $user['id'];
         $_SESSION['name'] = $user['name'];
         $_SESSION['role'] = $user['role'];
 
-        // LOG LOGIN
         log_activity("Login");
 
-        if ($user['role'] == 'admin') {
+        if ($user['role'] === 'admin') {
             header("Location: admin_dashboard.php");
-        } elseif ($user['role'] == 'petugas') {
+            exit;
+        } elseif ($user['role'] === 'petugas') {
             header("Location: petugas_dashboard.php");
+            exit;
         } else {
             header("Location: peminjam_dashboard.php");
+            exit;
         }
-        exit;
 
     } else {
         $error = "Login gagal!";
@@ -35,27 +43,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Login - Aplikasi Peminjaman Alat</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
 
-<div class="container">
-    <h2>Login</h2>
+<body class="login-body">
 
-    <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
+<div class="login-wrapper">
 
-    <form method="POST">
-        Username:
-        <input type="text" name="name" required>
+    <div class="login-card">
 
-        Password:
-        <input type="password" name="pass" required>
+        <a href="index.php" class="back-btn">← Kembali</a>
 
-        <button type="submit">Login</button>
-    </form>
+        <h2>Login</h2>
+
+        <?php if ($error): ?>
+            <div class="login-error"><?= $error ?></div>
+        <?php endif; ?>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="pass" required>
+            </div>
+
+            <button type="submit">Masuk</button>
+
+        </form>
+
+    </div>
+
 </div>
 
 </body>

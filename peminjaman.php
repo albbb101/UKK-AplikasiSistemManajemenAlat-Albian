@@ -2,11 +2,9 @@
 include 'config.php';
 require_role('admin');
 
-// ambil data dropdown
 $users = $mysqli->query("SELECT * FROM users WHERE role='peminjam'");
 $alat  = $mysqli->query("SELECT * FROM alat");
 
-// ================= TAMBAH PEMINJAMAN =================
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $iduser = $_POST['iduser'] ?? '';
@@ -16,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($iduser && $idalat && $tgl && $qty > 0) {
 
-        // cek stok
         $cek = $mysqli->query("SELECT qty FROM alat WHERE idalat='$idalat'");
         $data = $cek->fetch_assoc();
 
@@ -24,15 +21,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "<script>alert('Stok tidak cukup!');</script>";
         } else {
 
-            // insert
-            $mysqli->query("INSERT INTO peminjaman 
-            (tglpinjam, tglkembali, idalat, qty, iduser, status)
-            VALUES ('$tgl', NULL, '$idalat', '$qty', '$iduser', NULL, 'dipinjam')");
+            $mysqli->query("
+                INSERT INTO peminjaman 
+                (tglpinjam, tglkembali, idalat, qty, iduser, kondisiakhir, status)
+                VALUES (
+                    '$tgl',
+                    NULL,
+                    '$idalat',
+                    '$qty',
+                    '$iduser',
+                    '',
+                    'dipinjam'
+                )
+            ");
 
-            // kurangi stok
-            $mysqli->query("UPDATE alat 
+            $mysqli->query("
+                UPDATE alat 
                 SET qty = qty - $qty 
-                WHERE idalat='$idalat'");
+                WHERE idalat='$idalat'
+            ");
 
             header("Location: peminjaman.php");
             exit;
@@ -40,38 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// ================= KEMBALIKAN (FIXED) =================
-if (isset($_GET['kembali'])) {
-    $id = $_GET['kembali'];
-
-    $data = $mysqli->query("SELECT * FROM peminjaman WHERE idpinjam='$id'")->fetch_assoc();
-
-    // ❗ STOP kalau sudah dikembalikan
-    if ($data['status'] == 'dikembalikan') {
-        header("Location: peminjaman.php");
-        exit;
-    }
-
-    $today = date('Y-m-d');
-
-    // update status
-    $mysqli->query("UPDATE peminjaman SET
-        status='dikembalikan',
-        tglkembali='$today',
-        WHERE idpinjam='$id'
-    ");
-
-    // balikin stok (CUMA SEKALI)
-    $mysqli->query("UPDATE alat 
-        SET qty = qty + ".$data['qty']." 
-        WHERE idalat='".$data['idalat']."'
-    ");
-
-    header("Location: peminjaman.php");
-    exit;
-}
-
-// ================= AMBIL DATA =================
 $query = "
 SELECT p.*, u.namalengkap, a.namaalat
 FROM peminjaman p
@@ -92,6 +67,7 @@ $result = $mysqli->query($query);
 
 <body class="layout">
 
+<?php $activePage = 'peminjaman'; ?>
 <?php include 'sidebar.php'; ?>
 
 <div class="main">
@@ -99,16 +75,13 @@ $result = $mysqli->query($query);
 
 <h2>Peminjaman</h2>
 
-<!-- FORM -->
 <div class="form-box">
 <form method="POST">
 
 Peminjam:
 <select name="iduser">
 <?php while ($u = $users->fetch_assoc()) { ?>
-<option value="<?= $u['id'] ?>">
-<?= $u['namalengkap'] ?>
-</option>
+<option value="<?= $u['id'] ?>"><?= $u['namalengkap'] ?></option>
 <?php } ?>
 </select>
 
@@ -127,12 +100,13 @@ Tanggal:
 Jumlah:
 <input type="number" name="qty" required>
 
-<button type="submit">Tambah Peminjaman</button>
+<button class="btn add" type="submit">
+    Tambah Peminjaman
+</button>
 
 </form>
 </div>
 
-<!-- TABLE -->
 <table>
 <tr>
     <th>ID</th>
@@ -141,7 +115,7 @@ Jumlah:
     <th>Qty</th>
     <th>Tanggal Pinjam</th>
     <th>Status</th>
-    <th>Aksi</th>
+    <th>Kondisi</th>
 </tr>
 
 <?php while ($row = $result->fetch_assoc()) { ?>
@@ -152,15 +126,7 @@ Jumlah:
     <td><?= $row['qty'] ?></td>
     <td><?= $row['tglpinjam'] ?></td>
     <td><?= $row['status'] ?></td>
-    <td>
-        <?php if ($row['status'] == 'dipinjam') { ?>
-            <a href="peminjaman.php?kembali=<?= $row['idpinjam'] ?>"
-               class="btn edit"
-               onclick="return confirm('Konfirmasi pengembalian?')">
-               Kembalikan
-            </a>
-        <?php } else { echo "Selesai"; } ?>
-    </td>
+    <td><?= $row['kondisiakhir'] ?: '-' ?></td>
 </tr>
 <?php } ?>
 

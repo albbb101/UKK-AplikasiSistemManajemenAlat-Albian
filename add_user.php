@@ -3,7 +3,6 @@ include 'config.php';
 require_role('admin');
 
 if (isset($_POST['submit'])) {
-    $id = $_POST['id'];
     $name = $_POST['name'];
     $pass = $_POST['pass'];
     $role = $_POST['role'];
@@ -18,8 +17,8 @@ if (isset($_POST['submit'])) {
         $identitas = $filename;
     }
 
-    $mysqli->query("INSERT INTO users (id, name, pass, role, namalengkap, identitas, nohp)
-                    VALUES ('$id','$name','$pass','$role','$namalengkap','$identitas','$nohp')");
+    $mysqli->query("INSERT INTO users (name, pass, role, namalengkap, identitas, nohp)
+                    VALUES ('$name','$pass','$role','$namalengkap','$identitas','$nohp')");
 
     header("Location: users.php");
 }
@@ -43,9 +42,6 @@ if (isset($_POST['submit'])) {
 
 <div class="form-box">
 <form method="POST" enctype="multipart/form-data">
-
-ID:
-<input type="text" name="id" required>
 
 Username:
 <input type="text" name="name" required>

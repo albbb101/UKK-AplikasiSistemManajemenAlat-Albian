@@ -22,6 +22,7 @@ $result = $mysqli->query($query);
 
 <body class="layout">
 
+<?php $activePage = 'alatmasuk'; ?>
 <?php include 'sidebar.php'; ?>
 
 <div class="main">
