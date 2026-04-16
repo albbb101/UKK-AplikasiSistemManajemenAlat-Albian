@@ -14,13 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($iduser && $idalat && $tgl && $qty > 0) {
 
+        // cek alat
         $cek = $mysqli->query("SELECT qty FROM alat WHERE idalat='$idalat'");
         $data = $cek->fetch_assoc();
 
-        if ($data['qty'] < $qty) {
+        if (!$data) {
+            echo "<script>alert('Alat tidak ditemukan!');</script>";
+        } elseif ($data['qty'] < $qty) {
             echo "<script>alert('Stok tidak cukup!');</script>";
         } else {
 
+            // INSERT (status menunggu)
             $mysqli->query("
                 INSERT INTO peminjaman 
                 (tglpinjam, tglkembali, idalat, qty, iduser, kondisiakhir, status)
@@ -31,14 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     '$qty',
                     '$iduser',
                     '',
-                    'dipinjam'
+                    'menunggu'
                 )
-            ");
-
-            $mysqli->query("
-                UPDATE alat 
-                SET qty = qty - $qty 
-                WHERE idalat='$idalat'
             ");
 
             header("Location: peminjaman.php");
@@ -74,6 +72,13 @@ $result = $mysqli->query($query);
 <div class="content">
 
 <h2>Peminjaman</h2>
+
+<!-- ❗ WARNING JIKA TIDAK ADA ALAT -->
+<?php if ($alat->num_rows == 0) { ?>
+    <p style="color:red; font-weight:bold;">
+        Tidak ada alat tersedia! Tambahkan alat terlebih dahulu.
+    </p>
+<?php } ?>
 
 <div class="form-box">
 <form method="POST">
@@ -126,7 +131,7 @@ Jumlah:
     <td><?= $row['qty'] ?></td>
     <td><?= $row['tglpinjam'] ?></td>
     <td><?= $row['status'] ?></td>
-    <td><?= $row['kondisiakhir'] ?: '-' ?></td>
+    <td><?= $row['kondisiakhir'] ? $row['kondisiakhir'] : '-' ?></td>
 </tr>
 <?php } ?>
 

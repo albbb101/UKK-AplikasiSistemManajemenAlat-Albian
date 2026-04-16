@@ -12,25 +12,38 @@ if (isset($_POST['update'])) {
     $namalengkap = $_POST['namalengkap'];
     $nohp = $_POST['nohp'];
 
-    $identitas = $user['identitas'];
-
-    if (!empty($_FILES['identitas']['name'])) {
-        $filename = $_FILES['identitas']['name'];
-        move_uploaded_file($_FILES['identitas']['tmp_name'], "uploads/" . $filename);
-        $identitas = $filename;
-    }
-
-    $mysqli->query("UPDATE users SET
-        name='$name',
-        pass='$pass',
-        role='$role',
-        namalengkap='$namalengkap',
-        identitas='$identitas',
-        nohp='$nohp'
-        WHERE id='$id'
+    // ================= CEK DUPLIKAT (EXCEPT SELF) =================
+    $cek = $mysqli->query("
+        SELECT * FROM users 
+        WHERE (name='$name' OR nohp='$nohp') 
+        AND id != '$id'
     ");
 
-    header("Location: users.php");
+    if ($cek->num_rows > 0) {
+        echo "<script>alert('Username atau No HP sudah digunakan!');</script>";
+    } else {
+
+        $identitas = $user['identitas'];
+
+        if (!empty($_FILES['identitas']['name'])) {
+            $filename = $_FILES['identitas']['name'];
+            move_uploaded_file($_FILES['identitas']['tmp_name'], "uploads/" . $filename);
+            $identitas = $filename;
+        }
+
+        $mysqli->query("UPDATE users SET
+            name='$name',
+            pass='$pass',
+            role='$role',
+            namalengkap='$namalengkap',
+            identitas='$identitas',
+            nohp='$nohp'
+            WHERE id='$id'
+        ");
+
+        header("Location: users.php");
+        exit;
+    }
 }
 ?>
 

@@ -20,7 +20,7 @@
     </div>
 
     <div>
-        <a href="logout.php">Logout</a>
+        <a href="logout.php" onclick="return confirm('Yakin ingin logout?')">Logout</a>
     </div>
 
 </div>

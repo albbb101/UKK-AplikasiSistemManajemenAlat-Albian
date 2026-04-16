@@ -10,6 +10,7 @@ if (!isset($_SESSION)) session_start();
 <p><a href="petugas_peminjaman.php" style="color:white;">Peminjaman</a></p>
 <p><a href="petugas_pengembalian.php" style="color:white;">Pengembalian</a></p>
 <p><a href="petugas_laporan.php" style="color:white;">Laporan</a></p>
-<p><a href="logout.php" style="color:white;">Logout</a></p>
+<p><a href="logout.php" style="color:white;"
+onclick="return confirm('Yakin ingin logout?')">Logout</a></p>
 
 </div>

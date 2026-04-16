@@ -16,7 +16,8 @@ if (!isset($_SESSION)) session_start();
     </a>
     <a href="peminjaman_user.php" style="color:white;">Peminjaman Saya</a>
     <a href="pengembalian_user.php" style="color:white;">Pengembalian</a>
-    <a href="logout.php" style="color:white;">Logout</a>
+    <a href="logout.php" style="color:white;"
+    onclick="return confirm('Yakin ingin logout?')">Logout</a>
 </div>
 
 </div>

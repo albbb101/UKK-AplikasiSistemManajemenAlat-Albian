@@ -27,6 +27,7 @@ ORDER BY p.idpinjam DESC
 <th>Peminjam</th>
 <th>Alat</th>
 <th>Qty</th>
+<th>Tanggal Pinjam</th> <!-- ✅ NEW -->
 <th>Status</th>
 <th>Aksi</th>
 </tr>
@@ -37,6 +38,7 @@ ORDER BY p.idpinjam DESC
 <td><?= $row['peminjam'] ?></td>
 <td><?= $row['namaalat'] ?></td>
 <td><?= $row['qty'] ?></td>
+<td><?= $row['tglpinjam'] ?></td> <!-- ✅ NEW -->
 <td><?= $row['status'] ?></td>
 
 <td>

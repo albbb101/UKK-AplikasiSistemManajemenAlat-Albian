@@ -9,18 +9,27 @@ if (isset($_POST['submit'])) {
     $namalengkap = $_POST['namalengkap'];
     $nohp = $_POST['nohp'];
 
-    $identitas = '';
+    // ================= CEK DUPLIKAT =================
+    $cek = $mysqli->query("SELECT * FROM users WHERE name='$name' OR nohp='$nohp'");
 
-    if (!empty($_FILES['identitas']['name'])) {
-        $filename = $_FILES['identitas']['name'];
-        move_uploaded_file($_FILES['identitas']['tmp_name'], "uploads/" . $filename);
-        $identitas = $filename;
+    if ($cek->num_rows > 0) {
+        echo "<script>alert('Username atau No HP sudah digunakan!');</script>";
+    } else {
+
+        $identitas = '';
+
+        if (!empty($_FILES['identitas']['name'])) {
+            $filename = $_FILES['identitas']['name'];
+            move_uploaded_file($_FILES['identitas']['tmp_name'], "uploads/" . $filename);
+            $identitas = $filename;
+        }
+
+        $mysqli->query("INSERT INTO users (name, pass, role, namalengkap, identitas, nohp)
+                        VALUES ('$name','$pass','$role','$namalengkap','$identitas','$nohp')");
+
+        header("Location: users.php");
+        exit;
     }
-
-    $mysqli->query("INSERT INTO users (name, pass, role, namalengkap, identitas, nohp)
-                    VALUES ('$name','$pass','$role','$namalengkap','$identitas','$nohp')");
-
-    header("Location: users.php");
 }
 ?>
 

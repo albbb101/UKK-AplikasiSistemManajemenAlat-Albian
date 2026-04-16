@@ -28,6 +28,7 @@ WHERE p.status='menunggu konfirmasi'
 <th>Alat</th>
 <th>Qty</th>
 <th>Status</th>
+<th>Kondisi</th>
 <th>Aksi</th>
 </tr>
 
@@ -38,9 +39,13 @@ WHERE p.status='menunggu konfirmasi'
 <td><?= $row['namaalat'] ?></td>
 <td><?= $row['qty'] ?></td>
 <td><?= $row['status'] ?></td>
+<td><?= $row['kondisiakhir'] ? $row['kondisiakhir'] : '-' ?></td>
 
 <td>
-<a href="kembali.php?id=<?= $row['idpinjam'] ?>">Konfirmasi</a>
+<a href="kembali.php?id=<?= $row['idpinjam'] ?>"
+   onclick="return confirm('Konfirmasi barang sudah dikembalikan?')">
+   Konfirmasi
+</a>
 </td>
 
 </tr>
