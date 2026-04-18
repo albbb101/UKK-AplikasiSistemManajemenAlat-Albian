@@ -1,23 +1,25 @@
-<?php
-if (!isset($_SESSION)) session_start();
-?>
-
-<div style="background:#6a1b9a; padding:15px; color:white; display:flex; justify-content:space-between;">
-
-<div>
-    <b>Aplikasi Peminjaman Alat</b>
-</div>
-
-<div style="display:flex; gap:20px;">
-    <a href="peminjam_dashboard.php" style="color:white;">Dashboard</a>
-    <a href="katalog.php" style="color:white;">Katalog</a>
-    <a href="keranjang.php" style="color:white;">
-        Keranjang (<?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>)
-    </a>
-    <a href="peminjaman_user.php" style="color:white;">Peminjaman Saya</a>
-    <a href="pengembalian_user.php" style="color:white;">Pengembalian</a>
-    <a href="logout.php" style="color:white;"
-    onclick="return confirm('Yakin ingin logout?')">Logout</a>
-</div>
-
-</div>
+<?php if (!isset($_SESSION)) session_start(); ?>
+<nav class="navbar">
+    <div style="font-weight: bold; font-size: 20px;">Aplikasi Peminjaman Alat</div>
+    <div class="user-nav-links" style="display: flex; gap: 10px; align-items: center;">
+        
+        <a href="peminjam_dashboard.php" 
+           class="<?= ($activePage ?? '') == 'dashboard' ? 'active' : '' ?>">Dashboard</a>
+        
+        <a href="katalog.php" 
+           class="<?= ($activePage ?? '') == 'katalog' ? 'active' : '' ?>">Katalog</a>
+        
+        <a href="keranjang.php" 
+           class="<?= ($activePage ?? '') == 'keranjang' ? 'active' : '' ?>">
+           Keranjang (<?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>)
+        </a>
+        
+        <a href="peminjaman_user.php" 
+           class="<?= ($activePage ?? '') == 'pinjaman' ? 'active' : '' ?>">Pinjaman Saya</a>
+        
+        <a href="pengembalian_user.php" 
+           class="<?= ($activePage ?? '') == 'riwayat' ? 'active' : '' ?>">Riwayat Pengembalian</a>
+        
+        <a href="logout.php" class="logout-link" onclick="return confirm('Logout?')">Logout</a>
+    </div>
+</nav>

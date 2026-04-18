@@ -1,59 +1,61 @@
 <?php
 include 'config.php';
 require_role('peminjam');
-
 $iduser = $_SESSION['id'];
 
-$result = $mysqli->query("
-    SELECT 
-        p.*, 
-        p.qty AS qty_pinjam,
-        a.namaalat, 
-        a.spesifikasi, 
-        a.qty AS stok, 
-        a.gambaralat,
-        k.namakategori
-    FROM peminjaman p
-    JOIN alat a ON p.idalat = a.idalat
-    LEFT JOIN kategori k ON a.idkategori = k.idkategori
-    WHERE p.iduser='$iduser'
-    ORDER BY p.idpinjam DESC
-");
+// Define active page
+$activePage = 'pinjaman';
+
+$result = $mysqli->query("SELECT p.*, a.namaalat, a.gambaralat FROM peminjaman p JOIN alat a ON p.idalat = a.idalat WHERE p.iduser='$iduser' ORDER BY p.idpinjam DESC");
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Peminjaman Saya</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-
-<?php include 'navbar_user.php'; ?>
-
-<div style="padding:20px;">
-    <h2>Peminjaman Saya</h2>
-
-    <?php while ($row = $result->fetch_assoc()) : ?>
-    <div style="border:1px solid #ccc; margin:10px 0; padding:15px; border-radius:10px; background:#fff;">
-        <?php if (!empty($row['gambaralat'])) : ?>
-            <img src="uploads/<?= $row['gambaralat'] ?>" width="120" style="display:block; margin-bottom:10px; border-radius:5px;">
-        <?php endif; ?>
-
-        <h3><?= htmlspecialchars($row['namaalat']) ?></h3>
-        <p><b>Kategori:</b> <?= htmlspecialchars($row['namakategori'] ?? '-') ?></p>
-        <p><b>Spesifikasi:</b> <?= htmlspecialchars($row['spesifikasi']) ?></p>
-        <p><b>Jumlah Dipinjam:</b> <?= $row['qty_pinjam'] ?></p>
-        <p><b>Status:</b> <?= strtoupper($row['status']) ?></p>
-
-        <?php if ($row['status'] == 'dipinjam') : ?>
-            <a href="request_kembali.php?id=<?= $row['idpinjam'] ?>" style="display:inline-block; margin-top:10px; text-decoration:none; background:#eee; padding:5px 10px; border:1px solid #999; color:#000; border-radius:5px;">
-                Kembalikan
-            </a>
-        <?php endif; ?>
+    <?php include 'navbar_user.php'; ?>
+    <div class="main" style="padding: 40px;">
+        <div class="content">
+            <h2>Riwayat & Status Peminjaman</h2>
+            
+            <div class="table-wrapper">
+                <table>
+                    <tr style="background: #f4f6f9;">
+                        <th>Alat</th>
+                        <th>Qty</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                    <?php while ($row = $result->fetch_assoc()) : ?>
+                    <tr>
+                        <td style="display:flex; align-items:center; gap:10px;">
+                            <?php if($row['gambaralat']){ ?>
+                                <img src="uploads/<?= $row['gambaralat'] ?>" width="40" height="40" style="object-fit:cover; border-radius:4px;">
+                            <?php } ?>
+                            <strong><?= $row['namaalat'] ?></strong>
+                        </td>
+                        <td><?= $row['qty'] ?></td>
+                        <td>
+                            <span style="font-weight:bold; color: #2f3e9e;"><?= strtoupper($row['status']) ?></span>
+                        </td>
+                        <td>
+                            <?php if ($row['status'] == 'dipinjam') : ?>
+                                <a href="request_kembali.php?id=<?= $row['idpinjam'] ?>" class="btn edit">
+                                    Kembalikan
+                                </a>
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+            </div>
+        </div>
     </div>
-    <?php endwhile; ?>
-</div>
-
 </body>
 </html>

@@ -2,6 +2,9 @@
 include 'config.php';
 require_role('peminjam');
 
+// Define active page
+$activePage = 'riwayat';
+
 $iduser = $_SESSION['id'];
 
 $result = $mysqli->query("
@@ -16,8 +19,9 @@ $result = $mysqli->query("
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Pengembalian Saya</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -25,28 +29,58 @@ $result = $mysqli->query("
 
 <?php include 'navbar_user.php'; ?>
 
-<div style="padding:20px;">
-    <h2>Pengembalian Saya</h2>
+<div class="main" style="padding: 40px;">
+    <div class="content">
+        <h2 style="margin-bottom: 20px; color: #1f2a6d;">Riwayat Pengembalian</h2>
 
-    <?php if ($result->num_rows == 0) : ?>
-        <p>Belum ada data pengembalian.</p>
-    <?php endif; ?>
-
-    <?php while ($row = $result->fetch_assoc()) : ?>
-    <div style="border:1px solid #ccc; margin:10px 0; padding:15px; border-radius:10px; background:#fff;">
-        <?php if (!empty($row['gambaralat'])) : ?>
-            <img src="uploads/<?= $row['gambaralat'] ?>" width="120" style="display:block; margin-bottom:10px; border-radius:5px;">
-        <?php endif; ?>
-
-        <h3><?= htmlspecialchars($row['namaalat']) ?></h3>
-        <p><b>Kategori:</b> <?= htmlspecialchars($row['namakategori'] ?? '-') ?></p>
-        <p><b>Jumlah:</b> <?= $row['qty'] ?></p>
-        <p><b>Tanggal Pinjam:</b> <?= $row['tglpinjam'] ?></p>
-        <p><b>Tanggal Kembali:</b> <?= $row['tglkembali'] ?? '-' ?></p>
-        <p><b>Status:</b> <b><?= strtoupper($row['status']) ?></b></p>
-        <p><b>Kondisi:</b> <?= htmlspecialchars($row['kondisiakhir'] ?: '-') ?></p>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr style="background: #f4f6f9;">
+                        <th>Alat</th>
+                        <th>Qty</th>
+                        <th>Tgl Pinjam</th>
+                        <th>Tgl Kembali</th>
+                        <th>Status</th>
+                        <th>Kondisi Akhir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0) : ?>
+                        <?php while ($row = $result->fetch_assoc()) : ?>
+                        <tr>
+                            <td style="display:flex; align-items:center; gap:10px;">
+                                <?php if($row['gambaralat']){ ?>
+                                    <img src="uploads/<?= $row['gambaralat'] ?>" width="40" height="40" style="object-fit:cover; border-radius:4px;">
+                                <?php } ?>
+                                <strong><?= htmlspecialchars($row['namaalat']) ?></strong>
+                            </td>
+                            <td><?= $row['qty'] ?></td>
+                            <td><?= $row['tglpinjam'] ?></td>
+                            <td><?= $row['tglkembali'] ?? '-' ?></td>
+                            <td>
+                                <span style="font-weight:bold; color: <?= $row['status'] == 'dikembalikan' ? '#2e7d32' : 'orange' ?>;">
+                                    <?= strtoupper($row['status']) ?>
+                                </span>
+                            </td>
+                            <td><?= htmlspecialchars($row['kondisiakhir'] ?: '-') ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 20px; color: #888;">
+                                Belum ada data pengembalian.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <a href="peminjam_dashboard.php" class="back-btn">← Kembali ke Dashboard</a>
+        </div>
     </div>
-    <?php endwhile; ?>
 </div>
 
 </body>

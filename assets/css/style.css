@@ -1,5 +1,4 @@
-/* 
-   GLOBAL
+/* GLOBAL
 */
 
 * {
@@ -13,7 +12,7 @@ body {
 }
 
 /*
-   LANDING
+   LANDING & NAVBAR
 */
 
 .landing-body {
@@ -33,14 +32,50 @@ body {
     color: white;
 }
 
+/* Default styling for any link in navbar */
 .navbar a {
-    background: white;
-    color: #1f2a6d;
+    text-decoration: none;
     padding: 8px 16px;
     border-radius: 8px;
-    text-decoration: none;
     font-weight: bold;
 }
+
+/* USER NAV SPECIFIC FIX
+   This ensures links are transparent by default and only white when active.
+*/
+.navbar .user-nav-links a {
+    background: transparent;
+    color: white;
+    font-weight: normal;
+    transition: all 0.3s ease;
+}
+
+.navbar .user-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* The Active Link - Solid White background */
+.navbar .user-nav-links a.active {
+    background: white;
+    color: #1f2a6d;
+    font-weight: bold;
+}
+
+/* Special styling for Logout */
+.navbar .user-nav-links a.logout-link {
+    border: 1px solid rgba(255,255,255,0.3);
+    margin-left: 10px;
+}
+
+.navbar .user-nav-links a.logout-link:hover {
+    background: #ff4d4d;
+    border-color: #ff4d4d;
+    color: white;
+}
+
+/*
+   HERO & LOGIN
+*/
 
 .hero {
     flex: 1;
@@ -58,10 +93,6 @@ body {
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
-
-/*
-   LOGIN LAYOUT
-*/
 
 .login-body {
     height: 100vh;
@@ -84,7 +115,6 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
 }
 
-/* LOGIN CONTENT */
 .login-card h2 {
     margin-bottom: 15px;
     color: #1f2a6d;
@@ -153,8 +183,7 @@ body {
     text-decoration: underline;
 }
 
-/* 
-   ADMIN LAYOUT
+/* ADMIN LAYOUT
 */
 
 .layout {
@@ -163,7 +192,6 @@ body {
     overflow: hidden;
 }
 
-/* SIDEBAR */
 .sidebar {
     width: 220px;
     background: #2f3e9e;
@@ -199,7 +227,6 @@ body {
     border-left: 4px solid white;
 }
 
-/* MAIN */
 .main {
     flex: 1;
     height: 100vh;
@@ -213,9 +240,9 @@ body {
     border-radius: 10px;
 }
 
-/* =========================
-   TABLE
-========================= */
+/*
+   TABLE & BUTTONS
+*/
 
 .table-wrapper {
     width: 100%;
@@ -233,37 +260,24 @@ th, td {
     padding: 10px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
-
 .btn {
     padding: 6px 10px;
     text-decoration: none;
     color: white;
     border-radius: 5px;
     display: inline-block;
+    border: none;
+    cursor: pointer;
 }
 
-.add {
-    background: #2f3e9e;
-}
+.add { background: #2f3e9e; }
+.add:hover { background: #1f2a6d; }
+.edit { background: orange; }
+.delete { background: red; }
 
-.add:hover {
-    background: #1f2a6d;
-}
-
-.edit {
-    background: orange;
-}
-
-.delete {
-    background: red;
-}
-
-/* =========================
+/*
    DASHBOARD
-========================= */
+*/
 
 .dashboard-cards {
     display: grid;
@@ -277,3 +291,17 @@ th, td {
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
+
+/* .test {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.test-box {
+    text-align: center;
+    background: white;
+    width: 100%;
+    padding: 10px 0;
+} */
